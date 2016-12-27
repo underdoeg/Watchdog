@@ -97,6 +97,7 @@ void AppWatcher::process(){
 
 			// kill process
 			stream->rdbuf()->kill(SIGTERM);
+			stream.reset();
 		}
 	}
 
@@ -114,8 +115,6 @@ void AppWatcher::process(){
 
 		if(!msg.empty())
 			sendLog(msg);
-
-
 	}
 }
 
