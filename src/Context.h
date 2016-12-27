@@ -16,6 +16,8 @@ public:
 
 	void shutdown();
 
+	std::vector<std::shared_ptr<AppWatcher>> getWatchers();
+
 private:
     std::vector<std::shared_ptr<AppWatcher>> appWatchers;
 };

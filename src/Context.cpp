@@ -19,6 +19,11 @@ void Context::process(){
 }
 
 void Context::shutdown(){
+	std::cout << "==================================================================> EXIT <==================================================================" << std::endl;
 	appWatchers.clear();
-	std::this_thread::sleep_for(std::chrono::milliseconds(int(Config::get().getProcessRate()*1000)));
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+}
+
+std::vector<std::shared_ptr<AppWatcher> > Context::getWatchers(){
+	return appWatchers;
 }

@@ -19,6 +19,8 @@ public:
 	void stop();
 	void process();
 
+	const std::string& getPath();
+
 private:
 	void init();
 

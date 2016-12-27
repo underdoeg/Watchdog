@@ -10,7 +10,6 @@ static bool ngKeepRunning = true;
 static std::function<void()> ngShutdownFunc;
 
 void intHandler(int status) {
-	std::cout << "==================================================================> EXIT <==================================================================" << std::endl;
 	ngKeepRunning = false;
 	ngShutdownFunc();
 }

@@ -38,8 +38,6 @@ void AppWatcher::process(){
 			if(config.path.empty())
 				return;
 
-			//std::cout << "START " << config.path << std::endl;
-			//auto args = splitString(config.path+" "+config.arguments, ' ');
 			stream = std::make_shared<redi::ipstream>("cd "+getDirectory(config.path)+" && "+config.path+" "+config.arguments);
 		}
 	}else if(stream){
@@ -54,6 +52,10 @@ void AppWatcher::process(){
 //		while (*stream >> str) {
 //			std::cout << str << std::endl;
 //		}
-//	}
+	//	}
+}
+
+const std::string &AppWatcher::getPath(){
+	return config.path;
 }
 
