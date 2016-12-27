@@ -39,10 +39,32 @@ public:
 		args.set_text(appWatcher->getArgs());
 		args.set_sensitive(false);
 
-		auto spacer = Gtk::manage(new Gtk::Alignment());
-		pack_end(*spacer, true, true);
+		//auto spacer = Gtk::manage(new Gtk::Alignment());
+		pack_end(logViewScroll, true, true);
+
+		logViewScroll.add(logView);
 
 		show_all();
+
+
+		logView.get_buffer()->signal_insert().connect([&](const Gtk::TextBuffer::iterator& pos,const Glib::ustring& text, int size){
+			//auto buf = logView.get_buffer();
+			auto buf = logView.get_buffer();
+			while(buf->get_line_count() > 2048){
+				auto end = buf->begin();
+				if(!end.forward_line())
+					break;
+				buf->erase(buf->begin(), end);
+			}
+		});
+
+		appWatcher->onLog = [&](const std::string& msg){
+			auto buf = logView.get_buffer();
+			auto end = buf->end();
+			buf->insert(end, msg);
+			//end = buf->end();
+			//logView.scroll_to(end);
+		};
 
 
 		///////////
@@ -61,6 +83,8 @@ private:
 	Gtk::Entry args;
 	Gtk::FileChooserButton appChooser;
 	Gtk::Switch runSwitch;
+	Gtk::TextView logView;
+	Gtk::ScrolledWindow logViewScroll;
 };
 
 class GtkGui: public Gtk::Window{

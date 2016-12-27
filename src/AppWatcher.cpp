@@ -1,5 +1,7 @@
 #include <sstream>
-
+#include <fstream>
+#include <iomanip>
+#include <ios>
 #include "AppWatcher.h"
 
 AppWatcher::AppWatcher(){
@@ -21,6 +23,42 @@ AppWatcher::~AppWatcher(){
 void AppWatcher::init(){
 }
 
+void AppWatcher::sendLog(const std::string &m){
+	auto now = std::chrono::system_clock::now();
+	auto in_time_t = std::chrono::system_clock::to_time_t(now);
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&in_time_t), "%X");
+
+	std::string msg = "\n[" + ss.str() + "]\n" + m;
+
+	//std::cout << msg << std::endl;
+	{
+		std::ofstream outfile;
+		outfile.open(getLogFilePath(), std::ios_base::app);
+		outfile << msg;
+	}
+
+	if(onLog)
+		onLog(msg);
+}
+
+std::string AppWatcher::getLogFilePath(){
+	auto path = getexepath()+"logs/";
+	createDirectory(path);
+
+	auto now = std::chrono::system_clock::now();
+	auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d");
+
+	path += ss.str();
+	path += "-";
+	path += getName();
+	path += ".txt";
+	return path;
+}
+
 void AppWatcher::start(){
 	bShouldRun = true;
 }
@@ -38,24 +76,52 @@ void AppWatcher::process(){
 			if(config.path.empty())
 				return;
 
-			stream = std::make_shared<redi::ipstream>("cd "+getDirectory(config.path)+" && "+config.path+" "+config.arguments);
+			std::string path = getDirectory(config.path);
+			if(path.empty())
+				path = "/usr/bin/";
+
+			sendLog("start "+getName()+"\n----------------------------------------------------------------------------------------------------------------\n");
+
+			stream = std::make_shared<redi::ipstream>("cd "+ path +" && "+config.path+" "+config.arguments);
 		}
 	}else if(stream){
 		if(!bShouldRun){
+			// read pending lines
+			if(stream->rdbuf()->in_avail()){
+				std::string msg;
+				while(stream->getline(log.data(), log.size())){
+					msg += std::string(log.data())+"\n";
+				}
+				sendLog(msg);
+			}
+
 			// kill process
 			stream->rdbuf()->kill(SIGTERM);
 		}
 	}
 
-//	if(stream){
-//		std::string str;
-//		while (*stream >> str) {
-//			std::cout << str << std::endl;
-//		}
-	//	}
+	if(stream){
+
+		std::string msg;
+		int count = 0;
+		while(stream->rdbuf()->in_avail() && count < 32){
+			std::string line;
+			std::getline(*stream, line);
+			msg += line;
+			msg += "\n";
+			count ++;
+		}
+
+		if(!msg.empty())
+			sendLog(msg);
+
+
+	}
 }
 
-const std::string &AppWatcher::getPath(){
+std::string AppWatcher::getPath(){
+	if(!fileExists(config.path))
+		return "/usr/bin/"+config.path;
 	return config.path;
 }
 

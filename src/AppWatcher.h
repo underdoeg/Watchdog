@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <memory>
+#include <array>
 #include <chrono>
 #include <atomic>
 #include <pstreams/pstream.h>
@@ -19,12 +20,19 @@ public:
 	void stop();
 	void process();
 
-	const std::string& getPath();
+	std::__cxx11::string getPath();
 	std::string getName();
 	const std::string& getArgs();
 
+	std::function<void(const std::string&)> onLog;
+
 private:
 	void init();
+	void sendLog(const std::string& msg);
+
+	std::string getLogFilePath();
+
+	std::array<char, 2048> log;
 
 	Config::AppWatcher config;
 	std::shared_ptr<redi::ipstream> stream;
