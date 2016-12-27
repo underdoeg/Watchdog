@@ -59,3 +59,13 @@ const std::string &AppWatcher::getPath(){
 	return config.path;
 }
 
+std::string AppWatcher::getName(){
+	if(config.path.empty())
+		return "Not set";
+	return getFilename(config.path);
+}
+
+const std::string &AppWatcher::getArgs(){
+	return config.arguments;
+}
+

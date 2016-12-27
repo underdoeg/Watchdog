@@ -20,6 +20,8 @@ public:
 	void process();
 
 	const std::string& getPath();
+	std::string getName();
+	const std::string& getArgs();
 
 private:
 	void init();

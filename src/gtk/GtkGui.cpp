@@ -17,18 +17,25 @@ public:
 		set_spacing(spacing);
 
 		auto file = Gtk::manage(new Gtk::HBox());
-		//file->pack_start(appPath, true, true);
-		//file->pack_end(appChooser, false, false);
-
 		file->pack_start(appChooser, true, true);
 		file->pack_end(runSwitch, false, false);
-
 		file->set_spacing(spacing);
-
 		pack_start(*file, false, false);
+
+
+		auto argsContainer = Gtk::manage(new Gtk::HBox());
+		auto argsLabel = Gtk::manage(new Gtk::Label("Arguments"));
+		argsContainer->pack_start(*argsLabel, false, false);
+		argsContainer->pack_end(args, true, true);
+		argsContainer->set_spacing(spacing);
+		pack_start(*argsContainer, false, false);
+
+
 
 		appChooser.set_title("select app to run");
 		appChooser.set_filename(appWatcher->getPath());
+
+		args.set_text(appWatcher->getArgs());
 
 
 		auto spacer = Gtk::manage(new Gtk::Alignment());
@@ -50,6 +57,7 @@ public:
 private:
 	std::shared_ptr<AppWatcher> app;
 	Gtk::Label appPath;
+	Gtk::Entry args;
 	Gtk::FileChooserButton appChooser;
 	Gtk::Switch runSwitch;
 };
@@ -71,7 +79,7 @@ public:
 
 	void addWatcher(std::shared_ptr<AppWatcher> watcher){
 		appWatchers.push_back(std::make_shared<AppWatcherGui>(watcher));
-		apps.append_page(*appWatchers.back(), "App");
+		apps.append_page(*appWatchers.back(), watcher->getName());
 	}
 
 private:
