@@ -19,7 +19,9 @@ public:
 	std::vector<std::shared_ptr<AppWatcher>> getWatchers();
 
 private:
-    std::vector<std::shared_ptr<AppWatcher>> appWatchers;
+	std::vector<std::shared_ptr<AppWatcher>> appWatchers;
+	Config::Ftp ftpSettings;
+	std::chrono::system_clock::time_point nextFtpUpload;
 };
 
 #endif // CONTEXT_H

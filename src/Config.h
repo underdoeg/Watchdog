@@ -13,6 +13,11 @@ public:
 		std::string arguments;
 	};
 
+	struct Ftp{
+		bool enabled;
+		std::string host, user, password, folder;
+	};
+
 	static Config& get(){
 		static Config* config = new Config();
 		return *config;
@@ -47,6 +52,26 @@ public:
 		}catch(...){
 			return 1;
 		}
+	}
+
+	Ftp getFtpSettings(){
+		Ftp ftp;
+
+		ftp.enabled = false;
+
+		const auto& root = cfg.getRoot();
+		try{
+			auto& ftpRoot = root["ftp"];
+			ftpRoot.lookupValue("enabled", ftp.enabled);
+			ftpRoot.lookupValue("host", ftp.host);
+			ftpRoot.lookupValue("user", ftp.user);
+			ftpRoot.lookupValue("password", ftp.password);
+			ftpRoot.lookupValue("folder", ftp.folder);
+		}catch(const libconfig::SettingNotFoundException &nfex){
+			std::cout << "Error loading ftp settings" << std::endl;
+		}
+
+		return ftp;
 	}
 
 private:

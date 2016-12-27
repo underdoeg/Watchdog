@@ -3,6 +3,10 @@
 Context::Context(){
 	auto appWatchersConf = Config::get().getAppWatchers();
 
+	ftpSettings = Config::get().getFtpSettings();
+
+	nextFtpUpload = std::chrono::system_clock::now();
+
 	for(auto awc: appWatchersConf){
 		add(awc);
 	}
@@ -15,6 +19,12 @@ void Context::add(Config::AppWatcher awc){
 void Context::process(){
 	for(auto& aw: appWatchers){
 		aw->process();
+	}
+
+	// check if ftp upload is due
+	auto now = std::chrono::system_clock::now();
+	if(ftpSettings.enabled && nextFtpUpload < now){
+		// ftp upload
 	}
 }
 
