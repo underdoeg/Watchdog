@@ -1,44 +1,62 @@
-#include <chrono>
-#include <thread>
-
 #include "Config.h"
 #include "AppWatcher.h"
+#include "NoGui.h"
 
-static bool keepRunning = true;
-static std::vector<std::shared_ptr<AppWatcher>> appWatchers;
+#ifdef WITH_GTK_GUI
+#include "gtk/GtkGui.h"
+#endif
 
-void intHandler(int status) {
-	std::cout << "EXIT " << std::endl;
-	appWatchers.clear();
-	keepRunning = false;
+char* getCmdOption(char ** begin, char ** end, const std::string & option){
+	char ** itr = std::find(begin, end, option);
+	if (itr != end && ++itr != end){
+		return *itr;
+	}
+	return 0;
 }
 
+bool cmdOptionExists(char** begin, char** end, const std::string& option){
+	return std::find(begin, end, option) != end;
+}
+
+/////////////////////
+
+static std::vector<std::shared_ptr<AppWatcher>> appWatchers;
+
 int main(int argc, char** argv){
-	signal(SIGINT, intHandler);
-	signal(SIGTERM, intHandler);
-	signal(SIGKILL, intHandler);
 
-	Config config;
-	auto appWatchersConf = config.getAppWatchers();
+	bool useGui = false;
+#ifdef WITH_GTK_GUI
+	useGui = true;
+#endif
 
+	auto appWatchersConf = Config::get().getAppWatchers();
 
 	for(auto awc: appWatchersConf){
 		appWatchers.push_back(std::make_shared<AppWatcher>(awc));
 	}
 
-	while(keepRunning){
-		auto now = std::chrono::high_resolution_clock::now();
-		auto endTime = now + std::chrono::seconds(1);
+	auto shutdownFunction = [&]{
+		appWatchers.clear();
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	};
 
+	auto processFunction = [&]{
 		for(auto& aw: appWatchers){
 			aw->process();
 		}
+	};
 
-		if(endTime > std::chrono::high_resolution_clock::now())
-			std::this_thread::sleep_until(endTime);
-	}
+	int res = 0;
+
+#ifdef WITH_GTK_GUI
+	if(useGui)
+		res = runGtkGui(processFunction, shutdownFunction);
+#endif
+
+	if(!useGui)
+		res = runNoGui(processFunction, shutdownFunction);
 
 	appWatchers.clear();
 
-	return 0;
+	return res;
 }

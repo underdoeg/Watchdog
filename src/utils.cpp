@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-//#include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
 
 #include "utils.h"
 
@@ -42,7 +42,7 @@ std::vector<std::string> splitString(const std::string &str, char delimiter){
 	return ret;
 }
 
-/*
+
 bool fileExists(const std::string &name) {
 	return boost::filesystem::exists(name);
 }
@@ -169,6 +169,3 @@ void takeScreenshot(const std::string& file){
 	const std::string com = "scrot "+file;
 	system(com.c_str());
 }
-*/
-
-

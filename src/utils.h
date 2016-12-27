@@ -15,7 +15,7 @@ std::string getexepath();
 
 std::vector<std::string> splitString(const std::string& str, char delimiter);
 
-/*
+
 std::vector<std::string> listDirectory(const std::string& path, std::vector<std::string> extensions={});
 bool fileExists(const std::string& name);
 bool createDirectory(const std::string& path);
@@ -31,4 +31,4 @@ std::string getIpAddress();
 std::string makeUUID();
 
 void takeScreenshot(const std::string& file);
-*/
+

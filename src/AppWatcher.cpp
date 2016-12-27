@@ -38,9 +38,9 @@ void AppWatcher::process(){
 			if(config.path.empty())
 				return;
 
-			std::cout << "START " << config.path << std::endl;
-			auto args = splitString(config.path+" "+config.arguments, ' ');
-			stream = std::make_shared<redi::ipstream>(config.path, args);
+			//std::cout << "START " << config.path << std::endl;
+			//auto args = splitString(config.path+" "+config.arguments, ' ');
+			stream = std::make_shared<redi::ipstream>("cd "+getDirectory(config.path)+" && "+config.path+" "+config.arguments);
 		}
 	}else if(stream){
 		if(!bShouldRun){
@@ -49,12 +49,11 @@ void AppWatcher::process(){
 		}
 	}
 
-
-	if(stream){
-		std::string str;
-		while (*stream >> str) {
-			std::cout << str << std::endl;
-		}
-	}
+//	if(stream){
+//		std::string str;
+//		while (*stream >> str) {
+//			std::cout << str << std::endl;
+//		}
+//	}
 }
 
