@@ -31,12 +31,13 @@ public:
 		pack_start(*argsContainer, false, false);
 
 
-
 		appChooser.set_title("select app to run");
 		appChooser.set_filename(appWatcher->getPath());
+		appChooser.set_sensitive(false);
+
 
 		args.set_text(appWatcher->getArgs());
-
+		args.set_sensitive(false);
 
 		auto spacer = Gtk::manage(new Gtk::Alignment());
 		pack_end(*spacer, true, true);
