@@ -17,7 +17,9 @@ AppWatcher::AppWatcher(Config::AppWatcher conf){
 AppWatcher::~AppWatcher(){
 	if(!stream)
 		return;
-	stream->rdbuf()->kill(SIGTERM);
+	stop();
+	process();
+	//stream->rdbuf()->kill(SIGTERM);
 }
 
 void AppWatcher::init(){
@@ -86,11 +88,13 @@ void AppWatcher::process(){
 		}
 	}else if(stream){
 		if(!bShouldRun){
-			// read pending lines
+
+			// get pending messages
 			if(stream->rdbuf()->in_avail()){
 				std::string msg;
-				while(stream->getline(log.data(), log.size())){
-					msg += std::string(log.data())+"\n";
+				std::string str;
+				while (*stream >> str) {
+					msg += str+"\n";
 				}
 				sendLog(msg);
 			}

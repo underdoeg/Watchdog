@@ -28,7 +28,7 @@ int main(int argc, char** argv){
 	Context ctx;
 
 #ifdef WITH_GTK_GUI
-	if(cmdOptionExists(argv, argv+argc, "--no-gui"))
+	if(cmdOptionExists(argv, argv+argc, "--no-gui") || cmdOptionExists(argv, argv+argc, "--nogui") || cmdOptionExists(argv, argv+argc, "-n"))
 		return runNoGui(ctx);
 	else
 		return runGtkGui(ctx);

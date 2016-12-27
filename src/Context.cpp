@@ -20,7 +20,9 @@ void Context::process(){
 
 void Context::shutdown(){
 	std::cout << "==================================================================> EXIT <==================================================================" << std::endl;
-	appWatchers.clear();
+	for(auto& aw: appWatchers){
+		aw->stop();
+	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
