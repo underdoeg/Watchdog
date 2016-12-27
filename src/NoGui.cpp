@@ -15,19 +15,20 @@ void intHandler(int status) {
 	ngShutdownFunc();
 }
 
-int runNoGui(std::function<void ()> processFunction, std::function<void()> shutdownFunction){
+int runNoGui(Context& ctx){
 	signal(SIGINT, intHandler);
 	signal(SIGTERM, intHandler);
 	signal(SIGKILL, intHandler);
 
-	ngShutdownFunc = shutdownFunction;
-
+	ngShutdownFunc = [&]{
+		ctx.shutdown();
+	};
 
 	while(ngKeepRunning){
 		auto now = std::chrono::high_resolution_clock::now();
 		auto endTime = now + std::chrono::milliseconds(int(Config::get().getProcessRate()*1000));
 
-		processFunction();
+		ctx.process();
 
 		if(endTime > std::chrono::high_resolution_clock::now())
 			std::this_thread::sleep_until(endTime);

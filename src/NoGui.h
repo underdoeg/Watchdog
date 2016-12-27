@@ -1,5 +1,5 @@
 #pragma once
 
-#include <functional>
+#include "Context.h"
 
-int runNoGui(std::function<void()> processFunction, std::function<void()> shutdownFunction);
+int runNoGui(Context &ctx);

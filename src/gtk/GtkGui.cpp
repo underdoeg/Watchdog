@@ -1,7 +1,6 @@
 #include "GtkGui.h"
 
 #include <gtkmm.h>
-#include "../Config.h"
 
 
 class GtkGui: public Gtk::Window{
@@ -12,19 +11,17 @@ public:
 };
 
 /////////////////////////////////
-int runGtkGui(std::function<void ()> processFunction, std::function<void ()> shutdownFunction){
+int runGtkGui(Context &ctx){
 	auto app = Gtk::Application::create("ch.undef.Watchdog");
 
 	GtkGui gui;
-
-
 	Glib::signal_timeout().connect([&]{
-		processFunction();
+		ctx.process();
 		return true;
 	}, unsigned(Config::get().getProcessRate()*1000));
 
 	gui.signal_delete_event().connect([&](GdkEventAny* evt){
-		shutdownFunction();
+		ctx.shutdown();
 		return false;
 	});
 

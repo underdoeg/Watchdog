@@ -14,7 +14,7 @@ file(GLOB_RECURSE LIB_SRC_LIST "libs/*")
 
 file(GLOB SRC_LIST "src/*.h" "src/*.cpp")
 
-include_directories(${CONFIG++_INCLUDE_DIR} libs/ ${Boost_INCLUDE_DIRS})
+include_directories(${CONFIG++_INCLUDE_DIR} src/ libs/ ${Boost_INCLUDE_DIRS})
 
 #handle optional gtk gui
 if(WITH_GTK_GUI)
@@ -25,7 +25,7 @@ if(WITH_GTK_GUI)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
-    include_directories(${GTKMM_INCLUDE_DIRS})
+    include_directories(${GTKMM_INCLUDE_DIRS} )
     link_directories(${GTKMM_LIBRARY_DIRS})
     link_libraries(${GTKMM_LIBRARIES})
 

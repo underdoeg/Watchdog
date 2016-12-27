@@ -2,4 +2,6 @@
 
 #include <functional>
 
-int runGtkGui(std::function<void()> processFunction, std::function<void()> shutdownFunction);
+#include "Context.h"
+
+int runGtkGui(Context& ctx);
