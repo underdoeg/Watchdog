@@ -1,7 +1,7 @@
 # Watchdog
 Watchdog application for linux with an optional GTK interface
 
-<img src="https://cloud.githubusercontent.com/assets/243820/21504587/8233a95e-cc60-11e6-9342-10c3f22b947c.png" width="450" />
+<img src="https://cloud.githubusercontent.com/assets/243820/21504955/3c6922d4-cc63-11e6-923e-6aa07ab502aa.png" width="550" />
 
 ## dependencies
 - libconfig++
