@@ -14,6 +14,9 @@ Context::Context(){
 	for(auto awc: appWatchersConf){
 		add(awc);
 	}
+
+
+	system("xset s off");
 }
 
 Context::~Context(){
@@ -21,6 +24,7 @@ Context::~Context(){
 		std::cout << "Waiting for FTP upload to finish" << std::endl;
 		ftpUploadThread.join();
 	}
+	system("xset s default");
 }
 
 void Context::add(Config::AppWatcher awc){
