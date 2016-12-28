@@ -14,8 +14,16 @@ public:
 	};
 
 	struct Ftp{
+		Ftp(){
+			enabled = false;
+			rate = 4;
+			port = 21;
+		}
+
 		bool enabled;
+		float rate;
 		std::string host, user, password, folder;
+		int port;
 	};
 
 	static Config& get(){
@@ -67,6 +75,8 @@ public:
 			ftpRoot.lookupValue("user", ftp.user);
 			ftpRoot.lookupValue("password", ftp.password);
 			ftpRoot.lookupValue("folder", ftp.folder);
+			ftpRoot.lookupValue("rate", ftp.rate);
+			ftpRoot.lookupValue("port", ftp.port);
 		}catch(const libconfig::SettingNotFoundException &nfex){
 			std::cout << "Error loading ftp settings" << std::endl;
 		}

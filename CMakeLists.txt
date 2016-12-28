@@ -8,7 +8,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 
-find_package(Config++ REQUIRED)
 
 file(GLOB_RECURSE LIB_SRC_LIST "libs/*")
 
@@ -28,9 +27,15 @@ if(WITH_GTK_GUI)
     include_directories(${GTKMM_INCLUDE_DIRS} )
     link_directories(${GTKMM_LIBRARY_DIRS})
     link_libraries(${GTKMM_LIBRARIES})
-
 endif()
 
+# find curl
+find_package(CURL)
+include_directories(${CURL_INCLUDE_DIR})
+link_libraries(${CURL_LIBRARIES})
+
+# libconfig++
+find_package(Config++ REQUIRED)
 link_libraries(pthread ${CONFIG++_LIBRARY})
 
 #add boost

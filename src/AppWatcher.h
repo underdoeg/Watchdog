@@ -20,17 +20,17 @@ public:
 	void stop();
 	void process();
 
-	std::__cxx11::string getPath();
+	void sendLog(const std::string& msg);
+
+	std::string getPath();
 	std::string getName();
 	const std::string& getArgs();
+	std::string getLogFilePath();
 
 	std::function<void(const std::string&)> onLog;
 
 private:
 	void init();
-	void sendLog(const std::string& msg);
-
-	std::string getLogFilePath();
 
 	std::array<char, 2048> log;
 
