@@ -19,4 +19,4 @@ make
 ```
 
 To build with the gtk interface, run cmake with ``` cmake -DWITH_GTK_GUI=ON .. ```  
-The gui can still be deaktivated by adding the --nogui argument.  
+The gui can still be deactivated by adding the --nogui argument.  
