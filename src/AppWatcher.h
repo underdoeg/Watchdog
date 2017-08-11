@@ -6,6 +6,7 @@
 #include <chrono>
 #include <atomic>
 #include <pstreams/pstream.h>
+#include <functional>
 
 #include "Config.h"
 
